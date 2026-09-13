@@ -1,7 +1,7 @@
 import streamlit as st
 import urllib.parse
 
-# Configuração da página do aplicativo com tema e ícone
+# Configuração da página do aplicativo
 st.set_page_config(
     page_title="CreatorGuard 🛡️", 
     page_icon="🛡️", 
@@ -9,107 +9,126 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Estilização CSS Global para transformar o visual do Streamlit
+# Estilização CSS Global Avançada (Sem animações, foco em design limpo)
 st.markdown("""
     <style>
-    /* Remover barras e menus padrões poluídos */
+    /* Ocultar menus e rodapés padrões */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Customização do fundo e fontes principais */
+    /* Fundo escuro minimalista estilo Dashboard */
     .stApp {
-        background-color: #0f172a;
+        background-color: #0b0f19;
+        font-family: 'Inter', sans-serif;
     }
     
-    /* Caixa do Título Principal */
-    .header-box {
+    /* Cabeçalho Minimalista e Elegante */
+    .header-container {
         text-align: center;
-        padding: 30px 10px;
-        background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
-        border-radius: 16px;
-        border: 1px solid #312e81;
-        margin-bottom: 25px;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        padding: 40px 10px 20px 10px;
     }
     .main-title {
-        color: #38bdf8 !important;
-        font-size: 32px !important;
+        color: #f8fafc !important;
+        font-size: 36px !important;
         font-weight: 800 !important;
-        margin-bottom: 5px !important;
-        letter-spacing: -0.5px;
+        margin-bottom: 10px !important;
+        letter-spacing: -1px;
     }
     .subtitle {
-        color: #94a3b8 !important;
-        font-size: 15px !important;
+        color: #64748b !important;
+        font-size: 16px !important;
+        font-weight: 400;
     }
     
-    /* Estilização das linhas de resposta */
-    .result-row {
-        padding: 14px 18px;
-        border-radius: 10px;
-        margin-bottom: 12px;
-        font-weight: 500;
-        font-size: 15px;
-        display: flex;
-        align-items: center;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    /* Caixa de Entrada de Texto */
+    .stTextInput > div > div > input {
+        background-color: #1e293b !important;
+        color: #f8fafc !important;
+        border: 1px solid #334155 !important;
+        border-radius: 12px !important;
+        padding: 12px 16px !important;
+        font-size: 15px !important;
     }
-    .row-green { background-color: #064e3b; color: #34d399; border-left: 5px solid #10b981; }
-    .row-yellow { background-color: #451a03; color: #fbbf24; border-left: 5px solid #f59e0b; }
-    .row-red { background-color: #7f1d1d; color: #f87171; border-left: 5px solid #ef4444; }
+    .stTextInput > div > div > input:focus {
+        border-color: #38bdf8 !important;
+        box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2) !important;
+    }
+
+    /* Linhas de Resultado Individuais */
+    .result-card {
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 14px;
+        font-size: 15px;
+        line-height: 1.5;
+        font-weight: 500;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        border: 1px solid transparent;
+    }
+    .card-green { background-color: rgba(16, 185, 129, 0.1); color: #34d399; border-color: rgba(16, 185, 129, 0.2); }
+    .card-yellow { background-color: rgba(245, 158, 11, 0.1); color: #fbbf24; border-color: rgba(245, 158, 11, 0.2); }
+    .card-red { background-color: rgba(239, 68, 68, 0.1); color: #f87171; border-color: rgba(239, 68, 68, 0.2); }
+    
+    /* Card de Sucesso Final Definitivo */
+    .success-banner {
+        background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+        color: #e2e8f0;
+        padding: 30px;
+        border-radius: 16px;
+        border: 1px solid #059669;
+        margin-top: 25px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# Renderização do cabeçalho customizado lindo
+# Renderização do cabeçalho
 st.markdown("""
-    <div class="header-box">
+    <div class="header-container">
         <h1 class="main-title">CreatorGuard 🛡️</h1>
-        <p class="subtitle">A proteção inteligente contra golpes e vírus para Criadores de Conteúdo</p>
+        <p class="subtitle">Varredura inteligente de links para proteção de canais e redes sociais</p>
     </div>
 """, unsafe_allow_html=True)
 
-st.write("Cole abaixo a URL recebida por e-mail, Direct ou WhatsApp para iniciar a varredura automática:")
+st.markdown('<p style="color: #94a3b8; font-size: 14px; margin-bottom: 5px;">Cole a URL da proposta comercial abaixo:</p>', unsafe_allow_html=True)
+url_usuario = st.text_input("", placeholder="https://exemplo.com", label_visibility="collapsed")
 
-# Campo de texto integrado
-url_usuario = st.text_input("", placeholder="https://exemplo.com")
-
-# Centralizar botão e dar destaque
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    botao_clicado = st.button("Iniciar Varredura 🚀", type="primary", use_container_width=True)
+# Botão centralizado com estilo limpo do próprio Streamlit adaptado
+st.write("")
+botao_clicado = st.button("Analisar Link 🔍", type="primary", use_container_width=True)
 
 if botao_clicado:
     url_original = url_usuario.strip()
     
     if not url_original:
-        st.markdown('<div class="result-row row-yellow">⚠️ Por favor, insira um link válido antes de analisar.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="result-card card-yellow">⚠️ Por favor, insira uma URL válida para realizar a análise.</div>', unsafe_allow_html=True)
     else:
         url_limpa = url_original.lower()
         alerta_geral = False
         
         st.write("---")
-        st.markdown("### 📊 Relatório Técnico:")
+        st.markdown('<p style="color: #f8fafc; font-size: 18px; font-weight: 700; margin-bottom: 15px;">📊 Relatório de Segurança:</p>', unsafe_allow_html=True)
 
-        # 1. Validação REAL de HTTPS
+        # 1. Validação de HTTPS
         if url_limpa.startswith("http://"):
-            st.markdown('<div class="result-row row-red">❌ ALERTA DE SEGURANÇA: O site usa conexão insegura (HTTP). Dados podem ser interceptados!</div>', unsafe_allow_html=True)
+            st.markdown('<div class="result-card card-red">❌ CONNECTION INSECURE: O link utiliza o protocolo antigo HTTP. Seus dados cadastrais ou senhas inseridas nesta página podem ser interceptados facilmente por terceiros.</div>', unsafe_allow_html=True)
             alerta_geral = True
         elif url_limpa.startswith("https://"):
-            st.markdown('<div class="result-row row-green">🟢 Conexão segura básica detectada (HTTPS).</div>', unsafe_allow_html=True)
+            st.markdown('<div class="result-card card-green">🟢 PROTOCOLO SEGURO: Conexão criptografada padrão detectada com sucesso (HTTPS).</div>', unsafe_allow_html=True)
         else:
-            st.markdown('<div class="result-row row-yellow">⚠️ ATENÇÃO: Você não informou o protocolo (http:// ou https://). Não há garantia de criptografia na análise textual.</div>', unsafe_allow_html=True)
+            st.markdown('<div class="result-card card-yellow">⚠️ PROTOCOLO AUSENTE: Você omitiu o prefixo (http:// ou https://). A integridade do tráfego não pôde ser validada automaticamente apenas por este texto.</div>', unsafe_allow_html=True)
             if not url_limpa.startswith("www.") and "." in url_limpa:
                 url_original = "https://" + url_original
             elif url_limpa.startswith("www."):
                 url_original = "https://" + url_original
 
-        # Parser oficial
+        # Isolar partes do link
         parsed_url = urllib.parse.urlparse(url_original)
         dominio = parsed_url.netloc.lower()
         url_completa_analise = (parsed_url.netloc + parsed_url.path + parsed_url.query).lower()
 
-        # 2. Proteção contra Engenharia Social / Clones
+        # 2. Detecção de Engenharia Social / Páginas Clonadas
         marcas_alvo = ['instagram', 'youtube', 'tiktok', 'google', 'facebook', 'meta']
         termos_suspeitos = ['login', 'suporte', 'support', 'colab', 'verificar', 'partnership', 'ganhar', 'seguidores', 'promo', 'recompensa']
         
@@ -119,7 +138,7 @@ if botao_clicado:
                 if site_oficial not in dominio and f"{marca}.com.br" not in dominio:
                     for termo in termos_suspeitos:
                         if termo in url_completa_analise:
-                            st.markdown(f'<div class="result-row row-red">❌ ALERTA CRÍTICO DE PHISHING: O link cita a marca \'{marca.capitalize()}\' usando o termo \'{termo}\', mas NÃO pertence aos servidores oficiais! Trata-se de uma tentativa de clonagem de conta.</div>', unsafe_allow_html=True)
+                            st.markdown(f'<div class="result-card card-red">❌ ENGENHARIA SOCIAL DETECTADA: O link menciona a marca de forma ilegítima (\'{marca.capitalize()}\') em conjunto com o termo de ação \'{termo}\'. O domínio não pertence aos servidores oficiais da empresa e trata-se de um site clonado para roubo de contas.</div>', unsafe_allow_html=True)
                             alerta_geral = True
                             break
                     if alerta_geral:
@@ -129,7 +148,7 @@ if botao_clicado:
         encurtadores = ['bit.ly', 'cutt.ly', 'tinyurl.com', 'rb.gy', 'is.gd', 't.co']
         for enc in encurtadores:
             if enc in dominio:
-                st.markdown(f'<div class="result-row row-yellow">⚠️ ATENÇÃO: Este é um link encurtado ({enc}) criado artificialmente para ocultar o destino real do endereço.</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="result-card card-yellow">⚠️ URL CAMUFLADA: Este link está mascarado por um encurtador técnico ({enc}). Golpistas usam esse artifício para burlar filtros de e-mail e ocultar o destino malicioso final.</div>', unsafe_allow_html=True)
                 alerta_geral = True
                 break
 
@@ -137,28 +156,27 @@ if botao_clicado:
         plataformas_suspeitas = ['mediafire', 'mega.nz', 'wetransfer', 'drive-google', 'dropbox-share']
         for plat in plataformas_suspeitas:
             if plat in url_completa_analise:
-                st.markdown(f'<div class="result-row row-red">❌ ALERTA DE PLATAFORMA: O link exige downloads externos ({plat}). Empresas sérias enviam anexos contratuais corporativos diretos.</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="result-card card-red">❌ PLATAFORMA DE DOWNLOAD EXTERNA: O link redireciona para um servidor de armazenamento coletivo ({plat}). Propostas corporativas genuínas são enviadas formalmente via anexo de e-mail (PDF) ou DocuSign, nunca por links de download direto.</div>', unsafe_allow_html=True)
                 alerta_geral = True
                 break
 
-        # 5. Validação de Arquivos Perigosos (Vírus)
+        # 5. Validação de Arquivos Perigosos (Vírus Infostealer)
         extensoes_perigosas = ['.exe', '.zip', '.rar', '.scr', '.bat', '.msi', '.pif']
         for ext in extensoes_perigosas:
             if ext in url_completa_analise:
-                st.markdown(f'<div class="result-row row-red">❌ PERIGO MÁXIMO DETECTADO: A URL aponta para a extensão de vírus \'{ext}\'. Executar este arquivo compromete a segurança de todos os seus cookies de sessão.</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="result-card card-red">❌ COMPONENTE MALICIOSO CRÍTICO: A URL contém uma chamada direta para um arquivo executável ou compactado ({ext}). Baixar e abrir este arquivo injetará um script oculto em seu sistema capaz de capturar cookies de sessão ativa e contornar a autenticação de dois fatores (MFA).</div>', unsafe_allow_html=True)
                 alerta_geral = True
                 break
                 
-        # Bloco de Sucesso Final (Verdadeiro)
+        # Card de Sucesso Limpo e Sofisticado
         if not alerta_geral:
-            st.snow()
             st.markdown(
                 """
-                <div style="background-color: #064e3b; color: #34d399; padding: 25px; border-radius: 12px; border: 1px solid #059669; margin-top: 25px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);">
-                    <h3 style="margin-top: 0; color: #34d399; font-weight: 700;">🟢 Link Validado com Sucesso!</h3>
-                    <p style="margin-bottom: 0; color: #e2e8f0; font-size: 14px;">Os algoritmos do sistema não mapearam nenhuma assinatura óbvia de phishing, encurtador malicioso ou vírus infostealer. A navegação básica parece segura.</p>
-                    <hr style="border-color: #059669; margin: 15px 0;">
-                    <small style="color: #94a3b8; display: block; font-size: 12px; line-height: 1.4;">🛡️ Diretriz de Segurança Geral: Mesmo com validação positiva, mantenha o protocolo de jamais preencher senhas administrativas ou códigos MFA fora dos portais de login oficiais.</small>
+                <div class="success-banner">
+                    <h3 style="margin-top: 0; color: #34d399; font-weight: 700; font-size: 20px;">🟢 Link Analisado com Sucesso!</h3>
+                    <p style="margin-bottom: 0; color: #f1f5f9; font-size: 14px; opacity: 0.9;">O sistema realizou a varredura completa da estrutura de strings e parâmetros da URL e não detectou nenhuma assinatura óbvia de phishing, domínio clonado ou arquivo compactado suspeito.</p>
+                    <hr style="border-color: #059669; margin: 15px 0; opacity: 0.4;">
+                    <small style="color: #94a3b8; display: block; font-size: 12px; line-height: 1.4;">🛡️ Recomendação de Rotina: Embora este link específico não apresente indicadores de fraude visíveis, mantenha a política estrita de segurança de nunca digitar credenciais de acesso ou códigos em portais de terceiros.</small>
                 </div>
                 """, 
                 unsafe_allow_html=True
