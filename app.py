@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Estilização CSS Global Avançada
+# Estilização CSS Global Avançada (Fundo idêntico à logo)
 st.markdown("""
     <style>
     /* Ocultar menus e rodapés padrões */
@@ -17,9 +17,9 @@ st.markdown("""
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Fundo escuro minimalista estilo Dashboard */
+    /* Fundo correspondente ao tom escuro metálico da logo */
     .stApp {
-        background-color: #0b0f19;
+        background-color: #1e2229;
         font-family: 'Inter', sans-serif;
     }
     
@@ -29,17 +29,17 @@ st.markdown("""
         padding: 10px 10px 20px 10px;
     }
     .subtitle {
-        color: #64748b !important;
+        color: #94a3b8 !important;
         font-size: 16px !important;
         font-weight: 400;
         margin-top: 15px !important;
     }
     
-    /* Caixa de Entrada de Texto */
+    /* Caixa de Entrada de Texto Adaptada ao Novo Fundo */
     .stTextInput > div > div > input {
-        background-color: #1e293b !important;
+        background-color: #0b0f19 !important;
         color: #f8fafc !important;
-        border: 1px solid #334155 !important;
+        border: 1px solid #475569 !important;
         border-radius: 12px !important;
         padding: 12px 16px !important;
         font-size: 15px !important;
@@ -57,12 +57,12 @@ st.markdown("""
         font-size: 15px;
         line-height: 1.5;
         font-weight: 500;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         border: 1px solid transparent;
     }
-    .card-green { background-color: rgba(16, 185, 129, 0.1); color: #34d399; border-color: rgba(16, 185, 129, 0.2); }
-    .card-yellow { background-color: rgba(245, 158, 11, 0.1); color: #fbbf24; border-color: rgba(245, 158, 11, 0.2); }
-    .card-red { background-color: rgba(239, 68, 68, 0.1); color: #f87171; border-color: rgba(239, 68, 68, 0.2); }
+    .card-green { background-color: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3); }
+    .card-yellow { background-color: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
+    .card-red { background-color: rgba(239, 68, 68, 0.15); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
     
     /* Card de Sucesso Final Definitivo */
     .success-banner {
@@ -72,19 +72,19 @@ st.markdown("""
         border-radius: 16px;
         border: 1px solid #059669;
         margin-top: 25px;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
     }
     </style>
 """, unsafe_allow_html=True)
 
 # Renderização da Logo e do Cabeçalho
-col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
+col_logo1, col_logo2, col_logo3 = st.columns()
 with col_logo2:
     try:
-        # Exibe a logo centralizada com bordas arredondadas automáticas do Streamlit
+        # Exibe a logo centralizada
         st.image("logo.png", use_container_width=True)
     except:
-        # Caso a imagem ainda não tenha sido enviada, mostra o título em texto como plano de fundo
+        # Caso a imagem ainda não esteja no repositório
         st.markdown('<h1 style="text-align: center; color: #f8fafc;">CreatorGuard 🛡️</h1>', unsafe_allow_html=True)
 
 st.markdown("""
@@ -93,7 +93,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-st.markdown('<p style="color: #94a3b8; font-size: 14px; margin-bottom: 5px;">Cole a URL da proposta comercial abaixo:</p>', unsafe_allow_html=True)
+st.markdown('<p style="color: #cbd5e1; font-size: 14px; margin-bottom: 5px;">Cole a URL da proposta comercial abaixo:</p>', unsafe_allow_html=True)
 url_usuario = st.text_input("", placeholder="https://exemplo.com", label_visibility="collapsed")
 
 # Botão de Varredura
@@ -125,7 +125,7 @@ if botao_clicado:
             elif url_limpa.startswith("www."):
                 url_original = "https://" + url_original
 
-        # Parser oficial
+        # Isolar partes do link
         parsed_url = urllib.parse.urlparse(url_original)
         dominio = parsed_url.netloc.lower()
         url_completa_analise = (parsed_url.netloc + parsed_url.path + parsed_url.query).lower()
