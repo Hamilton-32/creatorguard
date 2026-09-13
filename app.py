@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Estilização CSS Global Avançada (Sem animações, foco em design limpo)
+# Estilização CSS Global Avançada
 st.markdown("""
     <style>
     /* Ocultar menus e rodapés padrões */
@@ -26,19 +26,13 @@ st.markdown("""
     /* Cabeçalho Minimalista e Elegante */
     .header-container {
         text-align: center;
-        padding: 40px 10px 20px 10px;
-    }
-    .main-title {
-        color: #f8fafc !important;
-        font-size: 36px !important;
-        font-weight: 800 !important;
-        margin-bottom: 10px !important;
-        letter-spacing: -1px;
+        padding: 10px 10px 20px 10px;
     }
     .subtitle {
         color: #64748b !important;
         font-size: 16px !important;
         font-weight: 400;
+        margin-top: 15px !important;
     }
     
     /* Caixa de Entrada de Texto */
@@ -83,10 +77,18 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Renderização do cabeçalho
+# Renderização da Logo e do Cabeçalho
+col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
+with col_logo2:
+    try:
+        # Exibe a logo centralizada com bordas arredondadas automáticas do Streamlit
+        st.image("logo.png", use_container_width=True)
+    except:
+        # Caso a imagem ainda não tenha sido enviada, mostra o título em texto como plano de fundo
+        st.markdown('<h1 style="text-align: center; color: #f8fafc;">CreatorGuard 🛡️</h1>', unsafe_allow_html=True)
+
 st.markdown("""
     <div class="header-container">
-        <h1 class="main-title">CreatorGuard 🛡️</h1>
         <p class="subtitle">Varredura inteligente de links para proteção de canais e redes sociais</p>
     </div>
 """, unsafe_allow_html=True)
@@ -94,7 +96,7 @@ st.markdown("""
 st.markdown('<p style="color: #94a3b8; font-size: 14px; margin-bottom: 5px;">Cole a URL da proposta comercial abaixo:</p>', unsafe_allow_html=True)
 url_usuario = st.text_input("", placeholder="https://exemplo.com", label_visibility="collapsed")
 
-# Botão centralizado com estilo limpo do próprio Streamlit adaptado
+# Botão de Varredura
 st.write("")
 botao_clicado = st.button("Analisar Link 🔍", type="primary", use_container_width=True)
 
@@ -123,7 +125,7 @@ if botao_clicado:
             elif url_limpa.startswith("www."):
                 url_original = "https://" + url_original
 
-        # Isolar partes do link
+        # Parser oficial
         parsed_url = urllib.parse.urlparse(url_original)
         dominio = parsed_url.netloc.lower()
         url_completa_analise = (parsed_url.netloc + parsed_url.path + parsed_url.query).lower()
@@ -168,7 +170,7 @@ if botao_clicado:
                 alerta_geral = True
                 break
                 
-        # Card de Sucesso Limpo e Sofisticado
+        # Card de Sucesso Final
         if not alerta_geral:
             st.markdown(
                 """
