@@ -1,5 +1,6 @@
 import streamlit as st
 import urllib.parse
+import os
 
 # Configuração da página do aplicativo
 st.set_page_config(
@@ -9,24 +10,28 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Estilização CSS Global Avançada (Fundo idêntico à logo)
+# Estilização CSS Global (Fundo correspondente ao tom escuro da logo)
 st.markdown("""
     <style>
-    /* Ocultar menus e rodapés padrões */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Fundo correspondente ao tom escuro metálico da logo */
     .stApp {
         background-color: #1e2229;
         font-family: 'Inter', sans-serif;
     }
     
-    /* Cabeçalho Minimalista e Elegante */
     .header-container {
         text-align: center;
         padding: 10px 10px 20px 10px;
+    }
+    .main-title-backup {
+        color: #f8fafc !important;
+        font-size: 36px !important;
+        font-weight: 800 !important;
+        margin-bottom: 5px !important;
+        text-align: center;
     }
     .subtitle {
         color: #94a3b8 !important;
@@ -35,7 +40,6 @@ st.markdown("""
         margin-top: 15px !important;
     }
     
-    /* Caixa de Entrada de Texto Adaptada ao Novo Fundo */
     .stTextInput > div > div > input {
         background-color: #0b0f19 !important;
         color: #f8fafc !important;
@@ -49,7 +53,6 @@ st.markdown("""
         box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2) !important;
     }
 
-    /* Linhas de Resultado Individuais */
     .result-card {
         padding: 16px 20px;
         border-radius: 12px;
@@ -64,7 +67,6 @@ st.markdown("""
     .card-yellow { background-color: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
     .card-red { background-color: rgba(239, 68, 68, 0.15); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
     
-    /* Card de Sucesso Final Definitivo */
     .success-banner {
         background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
         color: #e2e8f0;
@@ -77,15 +79,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Renderização da Logo e do Cabeçalho
-col_logo1, col_logo2, col_logo3 = st.columns()
+# Checagem segura da imagem para evitar quedas no sistema
+col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
 with col_logo2:
-    try:
-        # Exibe a logo centralizada
+    if os.path.exists("logo.png"):
         st.image("logo.png", use_container_width=True)
-    except:
-        # Caso a imagem ainda não esteja no repositório
-        st.markdown('<h1 style="text-align: center; color: #f8fafc;">CreatorGuard 🛡️</h1>', unsafe_allow_html=True)
+    else:
+        st.markdown('<h1 class="main-title-backup">CreatorGuard 🛡️</h1>', unsafe_allow_html=True)
 
 st.markdown("""
     <div class="header-container">
@@ -96,7 +96,6 @@ st.markdown("""
 st.markdown('<p style="color: #cbd5e1; font-size: 14px; margin-bottom: 5px;">Cole a URL da proposta comercial abaixo:</p>', unsafe_allow_html=True)
 url_usuario = st.text_input("", placeholder="https://exemplo.com", label_visibility="collapsed")
 
-# Botão de Varredura
 st.write("")
 botao_clicado = st.button("Analisar Link 🔍", type="primary", use_container_width=True)
 
@@ -112,7 +111,6 @@ if botao_clicado:
         st.write("---")
         st.markdown('<p style="color: #f8fafc; font-size: 18px; font-weight: 700; margin-bottom: 15px;">📊 Relatório de Segurança:</p>', unsafe_allow_html=True)
 
-        # 1. Validação de HTTPS
         if url_limpa.startswith("http://"):
             st.markdown('<div class="result-card card-red">❌ CONNECTION INSECURE: O link utiliza o protocolo antigo HTTP. Seus dados cadastrais ou senhas inseridas nesta página podem ser interceptados facilmente por terceiros.</div>', unsafe_allow_html=True)
             alerta_geral = True
@@ -125,12 +123,10 @@ if botao_clicado:
             elif url_limpa.startswith("www."):
                 url_original = "https://" + url_original
 
-        # Isolar partes do link
         parsed_url = urllib.parse.urlparse(url_original)
         dominio = parsed_url.netloc.lower()
         url_completa_analise = (parsed_url.netloc + parsed_url.path + parsed_url.query).lower()
 
-        # 2. Detecção de Engenharia Social / Páginas Clonadas
         marcas_alvo = ['instagram', 'youtube', 'tiktok', 'google', 'facebook', 'meta']
         termos_suspeitos = ['login', 'suporte', 'support', 'colab', 'verificar', 'partnership', 'ganhar', 'seguidores', 'promo', 'recompensa']
         
@@ -146,7 +142,6 @@ if botao_clicado:
                     if alerta_geral:
                         break
 
-        # 3. Validação de Encurtadores
         encurtadores = ['bit.ly', 'cutt.ly', 'tinyurl.com', 'rb.gy', 'is.gd', 't.co']
         for enc in encurtadores:
             if enc in dominio:
@@ -154,7 +149,6 @@ if botao_clicado:
                 alerta_geral = True
                 break
 
-        # 4. Validação de Plataformas de Download
         plataformas_suspeitas = ['mediafire', 'mega.nz', 'wetransfer', 'drive-google', 'dropbox-share']
         for plat in plataformas_suspeitas:
             if plat in url_completa_analise:
@@ -162,15 +156,13 @@ if botao_clicado:
                 alerta_geral = True
                 break
 
-        # 5. Validação de Arquivos Perigosos (Vírus Infostealer)
         extensoes_perigosas = ['.exe', '.zip', '.rar', '.scr', '.bat', '.msi', '.pif']
         for ext in extensoes_perigosas:
             if ext in url_completa_analise:
-                st.markdown(f'<div class="result-card card-red">❌ COMPONENTE MALICIOSO CRÍTICO: A URL contém uma chamada direta para um arquivo executável ou compactado ({ext}). Baixar e abrir este arquivo injetará um script oculto em seu sistema capaz de capturar cookies de sessão ativa e contornar a autenticação de dois fatores (MFA).</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="result-card card-red">❌ COMPONENTE MALICIOSO CRÍTICO: A URL contém uma chamada direta para um arquivo executável ou compactado ({ext}). Baixar e abrir este arquivo injetará um script oculto em seu sistema capaz de capturar cookies de sessão activa e contornar a autenticação de dois fatores (MFA).</div>', unsafe_allow_html=True)
                 alerta_geral = True
                 break
                 
-        # Card de Sucesso Final
         if not alerta_geral:
             st.markdown(
                 """
